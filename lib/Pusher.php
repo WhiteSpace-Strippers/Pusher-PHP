@@ -94,7 +94,7 @@ class Pusher {
     {
 
         // Check for dependent PHP extensions (JSON, cURL)
-        if(! extension_loaded('curl') || ! extension_loaded('json'))
+        if(!extension_loaded('curl') || !extension_loaded('json'))
         {
             throw new PusherException('There is missing dependant extensions - please ensure both cURL and JSON modules are installed');
         }
