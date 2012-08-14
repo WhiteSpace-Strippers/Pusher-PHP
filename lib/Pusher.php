@@ -104,7 +104,15 @@ class Pusher {
     }
 
     /**
+     *  Build the required HMAC'd auth string
      *
+     *  @param string $auth_key
+     *  @param string $auth_secret
+     *  @param string $request_path
+     *  @param array $query_params
+     *  @param string $auth_version [optional]
+     *  @param string $auth_timestamp [optional]
+     *  @return string
      */
     public static function build_auth_query_string($auth_key, $auth_secret, $request_method, $request_path,
                                                    $query_params = array(), $auth_version = '1.0', $auth_timestamp = null)
@@ -133,6 +141,7 @@ class Pusher {
      * Implode an array with the key and value pair giving
      * a glue, a separator between pairs and the array
      * to implode.
+     *
      * @param string $glue The glue between key and value
      * @param string $separator Separator between pairs
      * @param array $array The array to implode
@@ -227,6 +236,12 @@ class Pusher {
 
     }
 
+    /**
+     *  Fetch channel statistics
+     *
+     *  @param string $channel name
+     *  @return array
+     */
     public function get_channel_stats($channel)
     {
         $s_url = $this->settings['url'] . '/channels/' . $channel . '/stats';
@@ -269,6 +284,11 @@ class Pusher {
         return $response;
     }
 
+    /**
+     *  Fetch a list containing all channels
+     *
+     *  @return array
+     */
     public function get_channels()
     {
         $s_url = $this->settings['url'] . '/channels';
@@ -313,7 +333,7 @@ class Pusher {
     }
 
     /**
-     * Creates a socket signature
+     * Generates a socket signature
      *
      * @param int $socket_id
      * @param string $custom_data
