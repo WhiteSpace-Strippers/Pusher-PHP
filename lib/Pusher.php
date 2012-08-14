@@ -72,13 +72,13 @@ class Pusher
 
         // Setup defaults
         $this->settings['server']    = $host;
-        $this->settings['port']        = $port;
-        $this->settings['auth_key']    = $auth_key;
+        $this->settings['port']      = $port;
+        $this->settings['auth_key']  = $auth_key;
         $this->settings['secret']    = $secret;
         $this->settings['app_id']    = $app_id;
-        $this->settings['url']        = '/apps/' . $this->settings['app_id'];
-        $this->settings['debug']    = $debug;
-        $this->settings['timeout']    = $timeout;
+        $this->settings['url']       = '/apps/' . $this->settings['app_id'];
+        $this->settings['debug']     = $debug;
+        $this->settings['timeout']   = $timeout;
 
     }
 
