@@ -12,30 +12,30 @@
   }
 
   require_once('../lib/Pusher.php');
-	
-	class PusherChannelStatsTest extends PHPUnit_Framework_TestCase
-	{
+    
+    class PusherChannelStatsTest extends PHPUnit_Framework_TestCase
+    {
 
-		protected function setUp()
-		{
-			$this->pusher = new Pusher(PUSHERAPP_AUTHKEY, PUSHERAPP_SECRET, PUSHERAPP_APPID, true);
-		}
+        protected function setUp()
+        {
+            $this->pusher = new Pusher(PUSHERAPP_AUTHKEY, PUSHERAPP_SECRET, PUSHERAPP_APPID, true);
+        }
 
-		public function testChannelStats()
-		{
-			$response = $this->pusher->get_channel_stats('channel-test');
-			
-			$this->assertObjectHasAttribute('occupied', $response, 'class has occupied attribute');
-		}
-		
-		
-		public function testChannelList()
-		{
-			$channels = $this->pusher->get_channels();
-			
-			$this->assertTrue( is_array($channels), 'channels is an array' );
-		}
-		
-	}
+        public function testChannelStats()
+        {
+            $response = $this->pusher->get_channel_stats('channel-test');
+            
+            $this->assertObjectHasAttribute('occupied', $response, 'class has occupied attribute');
+        }
+        
+        
+        public function testChannelList()
+        {
+            $channels = $this->pusher->get_channels();
+            
+            $this->assertTrue( is_array($channels), 'channels is an array' );
+        }
+        
+    }
 
 ?>
