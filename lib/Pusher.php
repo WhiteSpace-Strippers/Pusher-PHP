@@ -21,6 +21,10 @@
         + Andrew Bender (igothelp@gmail.com)
 */
 
+class PusherException extends Exception {
+
+}
+
 class PusherInstance {
 
     private static $instance = null;
@@ -92,13 +96,13 @@ class Pusher {
         // Check for dependent PHP extensions (JSON, cURL)
         if(! extension_loaded('curl') || ! extension_loaded('json'))
         {
-            die('There is missing dependant extensions - please ensure both cURL and JSON modules are installed');
+            throw new PusherException('There is missing dependant extensions - please ensure both cURL and JSON modules are installed');
         }
 
         // Supports SHA256?
         if(!in_array('sha256', hash_algos()))
         {
-            die('SHA256 appears to be unsupported - make sure you have support for it, or upgrade your version of PHP.');
+            throw new PusherException('SHA256 appears to be unsupported - make sure you have support for it, or upgrade your version of PHP.');
         }
 
     }
@@ -206,7 +210,7 @@ class Pusher {
         $ch = curl_init();
         if($ch === false)
         {
-            die('Could not initialise cURL!');
+            throw new PusherException('Could not initialise cURL!');
         }
 
         // Set cURL opts and execute request
@@ -218,6 +222,7 @@ class Pusher {
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->settings['timeout']);
 
         $response = curl_exec($ch);
+        $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         curl_close($ch);
 
@@ -231,7 +236,7 @@ class Pusher {
         }
         else
         {
-            return false;
+            throw new PusherException("HTTP Error: $http_status");
         }
 
     }
@@ -259,7 +264,7 @@ class Pusher {
         $ch = curl_init();
         if($ch === false)
         {
-            die('Could not initialise cURL!');
+            throw new PusherException('Could not initialise cURL!');
         }
 
         curl_setopt($ch, CURLOPT_URL, $full_url);
@@ -276,7 +281,7 @@ class Pusher {
         }
         else
         {
-            $response = false;
+            throw new PusherException("HTTP Error $http_status");
         }
 
         curl_close($ch);
@@ -306,7 +311,7 @@ class Pusher {
         $ch = curl_init();
         if($ch === false)
         {
-            die('Could not initialise cURL!');
+            throw new PusherException('Could not initialise cURL!');
         }
 
         curl_setopt($ch, CURLOPT_URL, $full_url);
@@ -325,7 +330,7 @@ class Pusher {
         }
         else
         {
-            $response = false;
+            throw new PusherException("HTTP Error $http_status");
         }
 
         curl_close($ch);
