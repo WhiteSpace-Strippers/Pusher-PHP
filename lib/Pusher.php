@@ -39,7 +39,7 @@ class PusherInstance {
             self::$api_key,
             self::$secret,
             self::$app_id
-        );
+       );
 
         return self::$instance;
     }
@@ -117,7 +117,7 @@ class Pusher {
         $params = array_merge($params, $query_params);
         ksort($params);
 
-        $string_to_sign = "$request_method\n" . $request_path . "\n" . Pusher::array_implode( '=', '&', $params );
+        $string_to_sign = "$request_method\n" . $request_path . "\n" . Pusher::array_implode('=', '&', $params);
 
         $auth_signature = hash_hmac('sha256', $string_to_sign, $auth_secret, false);
 
@@ -146,10 +146,9 @@ class Pusher {
       {
           if(is_array($val))
           {
-              $val = implode( ',', $val );
+              $val = implode(',', $val);
           }
           $string[] = "{$key}{$glue}{$val}";
-
       }
       return implode($separator, $string);
   }
@@ -179,7 +178,7 @@ class Pusher {
         $query_params['name'] = $event;
 
         // Socket ID set?
-        if ($socket_id !== null)
+        if($socket_id !== null)
         {
             $query_params['socket_id'] = $socket_id;
         }
@@ -248,25 +247,24 @@ class Pusher {
             die('Could not initialise cURL!');
         }
 
-        curl_setopt( $ch, CURLOPT_URL, $full_url );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, array ( "Content-Type: application/json" ) );
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-        curl_setopt( $ch, CURLOPT_TIMEOUT, $this->settings['timeout'] );
+        curl_setopt($ch, CURLOPT_URL, $full_url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array ("Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->settings['timeout']);
 
-        $response = curl_exec( $ch );
-
+        $response = curl_exec($ch);
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if($http_status == 200)
         {
-          $response = json_decode($response);
+            $response = json_decode($response);
         }
         else
         {
-          $response = false;
+            $response = false;
         }
 
-        curl_close( $ch );
+        curl_close($ch);
 
         return $response;
     }
@@ -277,18 +275,18 @@ class Pusher {
 
         // Create the signed signature...
         $signed_query = Pusher::build_auth_query_string(
-          $this->settings['auth_key'],
-          $this->settings['secret'],
-          'GET',
-          $s_url);
+            $this->settings['auth_key'],
+            $this->settings['secret'],
+            'GET',
+            $s_url);
 
         $full_url = $this->settings['server'] . ':' . $this->settings['port'] . $s_url . '?' . $signed_query;
 
         // Set cURL opts and execute request
         $ch = curl_init();
-        if ( $ch === false )
+        if($ch === false)
         {
-            die( 'Could not initialise cURL!' );
+            die('Could not initialise cURL!');
         }
 
         curl_setopt($ch, CURLOPT_URL, $full_url);
@@ -359,7 +357,7 @@ class Pusher {
             $user_data['user_info'] = $user_info;
         }
 
-        return $this->socket_auth($channel, $socket_id, json_encode($user_data) );
+        return $this->socket_auth($channel, $socket_id, json_encode($user_data));
     }
 
 
