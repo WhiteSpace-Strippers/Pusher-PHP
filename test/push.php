@@ -1,15 +1,15 @@
 <?php
 
-  if(file_exists('push.php') === true)
-  {
-    require_once('config.php');
-  }
-  else
-  {
-	  define('PUSHERAPP_AUTHKEY', getenv('PUSHERAPP_AUTHKEY'));
-	  define('PUSHERAPP_SECRET' , getenv('PUSHERAPP_SECRET'));
-	  define('PUSHERAPP_APPID'  , getenv('PUSHERAPP_APPID'));
-  }
+	if(file_exists('push.php') === true)
+	{
+		require_once('config.php');
+	}
+	else
+	{
+		define('PUSHERAPP_AUTHKEY', getenv('PUSHERAPP_AUTHKEY'));
+		define('PUSHERAPP_SECRET' , getenv('PUSHERAPP_SECRET'));
+		define('PUSHERAPP_APPID'	, getenv('PUSHERAPP_APPID'));
+	}
 
 	require_once('../lib/Pusher.php');
 

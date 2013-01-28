@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
 		Pusher PHP Library
 	/////////////////////////////////
 	This was a very simple PHP library to the Pusher API.
@@ -22,22 +22,22 @@
 */
 
 class PusherInstance {
-	
+
 	private static $instance = null;
-	private static $app_id  = '';
-	private static $secret  = '';
+	private static $app_id	= '';
+	private static $secret	= '';
 	private static $api_key = '';
-	
+
 	private function __construct() { }
 	private function __clone() { }
-	
+
 	public static function get_pusher()
 	{
 		if (self::$instance !== null) return self::$instance;
 
 		self::$instance = new Pusher(
-			self::$api_key, 
-			self::$secret, 
+			self::$api_key,
+			self::$secret,
 			self::$app_id
 		);
 
@@ -51,11 +51,11 @@ class Pusher
 	private $settings = array ();
 
 	/**
-	* PHP5 Constructor. 
-	* 
-	* Initializes a new Pusher instance with key, secret , app ID and channel. 
+	* PHP5 Constructor.
+	*
+	* Initializes a new Pusher instance with key, secret , app ID and channel.
 	* You can optionally turn on debugging for all requests by setting debug to true.
-	* 
+	*
 	* @param string $auth_key
 	* @param string $secret
 	* @param int $app_id
@@ -101,58 +101,58 @@ class Pusher
 		}
 
 	}
-	
+
 	/**
 	 *
 	 */
 	public static function build_auth_query_string($auth_key, $auth_secret, $request_method, $request_path,
-	  $query_params = array(), $auth_version = '1.0', $auth_timestamp = null)
-	{	
+		$query_params = array(), $auth_version = '1.0', $auth_timestamp = null)
+	{
 		$params = array();
 		$params['auth_key'] = $auth_key;
 		$params['auth_timestamp'] = (is_null($auth_timestamp)?time() : $auth_timestamp);
 		$params['auth_version'] = $auth_version;
-		
+
 		$params = array_merge($params, $query_params);
 		ksort($params);
-		
+
 		$string_to_sign = "$request_method\n" . $request_path . "\n" . Pusher::array_implode( '=', '&', $params );
 
 		$auth_signature = hash_hmac( 'sha256', $string_to_sign, $auth_secret, false );
-		
+
 		$params['auth_signature'] = $auth_signature;
 		ksort($params);
-		
+
 		$auth_query_string = Pusher::array_implode( '=', '&', $params );
-		
+
 		return $auth_query_string;
 	}
-	
-	/**
-   * Implode an array with the key and value pair giving
-   * a glue, a separator between pairs and the array
-   * to implode.
-   * @param string $glue The glue between key and value
-   * @param string $separator Separator between pairs
-   * @param array $array The array to implode
-   * @return string The imploded array
-   */
-  public static function array_implode( $glue, $separator, $array ) {
-      if ( ! is_array( $array ) ) return $array;
-      $string = array();
-      foreach ( $array as $key => $val ) {
-          if ( is_array( $val ) )
-              $val = implode( ',', $val );
-          $string[] = "{$key}{$glue}{$val}";
-
-      }    
-      return implode( $separator, $string );
-  }
 
 	/**
-	* Trigger an event by providing event name and payload. 
+	 * Implode an array with the key and value pair giving
+	 * a glue, a separator between pairs and the array
+	 * to implode.
+	 * @param string $glue The glue between key and value
+	 * @param string $separator Separator between pairs
+	 * @param array $array The array to implode
+	 * @return string The imploded array
+	 */
+	public static function array_implode( $glue, $separator, $array ) {
+			if ( ! is_array( $array ) ) return $array;
+			$string = array();
+			foreach ( $array as $key => $val ) {
+					if ( is_array( $val ) )
+							$val = implode( ',', $val );
+					$string[] = "{$key}{$glue}{$val}";
+
+			}
+			return implode( $separator, $string );
+	}
+
+	/**
+	* Trigger an event by providing event name and payload.
 	* Optionally provide a socket ID to exclude a client (most likely the sender).
-	* 
+	*
 	* @param string $event
 	* @param mixed $payload
 	* @param int $socket_id [optional]
@@ -164,27 +164,27 @@ class Pusher
 	{
 		# Add channel to URL..
 		$s_url = $this->settings['url'] . '/channels/' . $channel . '/events';
-		
+
 		$query_params = array();
-		
+
 		$payload_encoded = $already_encoded ? $payload : json_encode( $payload );
 		$query_params['body_md5'] = md5( $payload_encoded );
-		
+
 		$query_params['name'] = $event;
-		
+
 		# Socket ID set?
 		if ( $socket_id !== null )
 		{
 			$query_params['socket_id'] = $socket_id;
-		}		
+		}
 
 		# Create the signed signature...
 		$signed_query = Pusher::build_auth_query_string(
-		  $this->settings['auth_key'],
-		  $this->settings['secret'],
-		  'POST',
-		  $s_url,
-		  $query_params);
+			$this->settings['auth_key'],
+			$this->settings['secret'],
+			'POST',
+			$s_url,
+			$query_params);
 
 		$full_url = $this->settings['server'] . ':' . $this->settings['port'] . $s_url . '?' . $signed_query;
 
@@ -221,97 +221,97 @@ class Pusher
 		}
 
 	}
-	
+
 	public function get_channel_stats($channel)
 	{
-		$s_url = $this->settings['url'] . '/channels/' . $channel . '/stats';	
+		$s_url = $this->settings['url'] . '/channels/' . $channel . '/stats';
 
 		# Create the signed signature...
 		$signed_query = Pusher::build_auth_query_string(
-		  $this->settings['auth_key'],
-		  $this->settings['secret'],
-		  'GET',
-		  $s_url);
+			$this->settings['auth_key'],
+			$this->settings['secret'],
+			'GET',
+			$s_url);
 
 		$full_url = $this->settings['server'] . ':' . $this->settings['port'] . $s_url . '?' . $signed_query;
-		
+
 		# Set cURL opts and execute request
 		$ch = curl_init();
 		if ( $ch === false )
 		{
 			die( 'Could not initialise cURL!' );
 		}
-		
+
 		curl_setopt( $ch, CURLOPT_URL, $full_url );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, array ( "Content-Type: application/json" ) );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
 		curl_setopt( $ch, CURLOPT_TIMEOUT, $this->settings['timeout'] );
 
 		$response = curl_exec( $ch );
-		
+
 		$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		
+
 		if($http_status == 200)
 		{
-		  $response = json_decode($response);
+			$response = json_decode($response);
 		}
 		else
 		{
-		  $response = false;
+			$response = false;
 		}
 
 		curl_close( $ch );
-		
+
 		return $response;
 	}
-	
+
 	public function get_channels()
 	{
-		$s_url = $this->settings['url'] . '/channels';	
+		$s_url = $this->settings['url'] . '/channels';
 
 		# Create the signed signature...
 		$signed_query = Pusher::build_auth_query_string(
-		  $this->settings['auth_key'],
-		  $this->settings['secret'],
-		  'GET',
-		  $s_url);
+			$this->settings['auth_key'],
+			$this->settings['secret'],
+			'GET',
+			$s_url);
 
 		$full_url = $this->settings['server'] . ':' . $this->settings['port'] . $s_url . '?' . $signed_query;
-		
+
 		# Set cURL opts and execute request
 		$ch = curl_init();
 		if ( $ch === false )
 		{
 			die( 'Could not initialise cURL!' );
 		}
-		
+
 		curl_setopt( $ch, CURLOPT_URL, $full_url );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, array ( "Content-Type: application/json" ) );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
 		curl_setopt( $ch, CURLOPT_TIMEOUT, $this->settings['timeout'] );
 
 		$response = curl_exec( $ch );
-		
+
 		$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		
+
 		if($http_status == 200)
 		{
-		  $response = json_decode($response);
-		  $response = $response->channels;
+			$response = json_decode($response);
+			$response = $response->channels;
 		}
 		else
 		{
-		  $response = false;
+			$response = false;
 		}
 
 		curl_close( $ch );
-		
+
 		return $response;
 	}
 
 	/**
 	* Creates a socket signature
-	* 
+	*
 	* @param int $socket_id
 	* @param string $custom_data
 	* @return string
@@ -331,7 +331,7 @@ class Pusher
 		$signature = array ( 'auth' => $this->settings['auth_key'] . ':' . $signature );
 		// add the custom data if it has been supplied
 		if($custom_data){
-		  $signature['channel_data'] = $custom_data;
+			$signature['channel_data'] = $custom_data;
 		}
 		return json_encode( $signature );
 
